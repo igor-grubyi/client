@@ -1,17 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { createJob } from '../graphql/queries';
+import { useCreateCompany } from '../graphql/hooks';
 
 function JobForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const navigate = useNavigate();
+  const { createJob, result } = useCreateCompany();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const job = await createJob({ title, description });
     navigate(`/jobs/${job.id}`)
   };
+
+  // if (error) return <div>{`Error: ${error}`}</div>;
+  if (result?.loading) {
+    console.log('Loading!');
+    return <div>loading...</div>;
+  }
 
   return (
     <div>
